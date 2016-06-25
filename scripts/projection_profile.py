@@ -16,6 +16,8 @@ def profile_one_dim(im):
 	im = gray_level(im)
 	print(np.shape(im))
 	vertical_sum = np.sum(im, axis=0)/np.shape(im)[1]
+	fig = plt.figure(0)
+	fig.canvas.set_window_title('Projection Profile')
 	plt.plot(vertical_sum)
 	plt.show()
 	zone_division(im, vertical_sum)
@@ -61,15 +63,53 @@ def zone_division(im, vertical_sum):
 	'''
 
 	x_right = list(vertical_sum).index(max(vertical_sum[low:high]))
-	print(x_right, 'Max')
+	print(x_right, 'x_right')
 	vert_prof = vertical_profile(im, x_right)
+
+	# For ytop
+	def ytop():
+		low = math.floor(0.05*len(vert_prof))
+		high = math.floor(0.50*len(vert_prof))
+		ytopv = min(vert_prof[low:high])
+		# ytopi = vert_prof.index(ytopv)
+		ytopi = np.argmin(np.asarray(vert_prof[low:high])) + low
+
+		print(ytopi, 'y-top index')
+		fig = plt.figure(0)
+		fig.canvas.set_window_title('Vertical Profile at x_right')
+		plt.plot(vert_prof)
+		plt.show()
+		return ytopi
+
+
+	# For ybottom
+	def ybottom():
+		low = math.floor(0.51*len(vert_prof))
+		high = math.floor(0.95*len(vert_prof))
+		vert_prof_derivative = np.zeros(len(vert_prof))
+		'''Calculate derivative using finite difference
+			f'(x) = f(x+h) - f(x)/h'''
+		h = 20
+		for i in range(0, len(vert_prof)-h):
+			vert_prof_derivative[i] = (vert_prof[i+h] - vert_prof[i])/h
+		ybottomv = min(vert_prof_derivative[low:high])
+		# ybottomi = list(vert_prof_derivative[low:high]).index(ybottomv) + low
+		ybottomi = np.argmin(np.asarray(vert_prof_derivative[low:high])) + low
+		print(ybottomi, 'y-bottom index')
+
+		fig = plt.figure(0)
+		fig.canvas.set_window_title('Vertical Profile Derivative at x_right')
+		plt.plot(vert_prof_derivative)
+		plt.show()
+
+	ytopi = ytop()
+	ybottomi = ybottom()
+
 
 def vertical_profile(im, x_right):
 	vert_prof = []
 	for x in im:
 		vert_prof.append(x[x_right])
-	plt.plot(vert_prof)
-	plt.show()
 	return vert_prof
 
 if __name__ == '__main__':
