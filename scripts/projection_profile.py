@@ -17,7 +17,7 @@ def profile_one_dim(im):
     print(np.shape(im))
     vertical_sum = np.sum(im, axis=0)/np.shape(im)[1]
     fig = plt.figure(0)
-    fig.canvas.set_window_title('Projection Profile')
+    fig.canvas.set_window_title('Projection Profile - ' + filename)
     plt.plot(vertical_sum)
     plt.show()
     zone_division(im, vertical_sum)
@@ -76,7 +76,7 @@ def zone_division(im, vertical_sum):
 
         print(ytopi, 'y-top index')
         fig = plt.figure(0)
-        fig.canvas.set_window_title('Vertical Profile at x_right')
+        fig.canvas.set_window_title('Vertical Profile at x_right - ' + filename)
         plt.plot(vert_prof)
         plt.show()
         return ytopi
@@ -98,7 +98,7 @@ def zone_division(im, vertical_sum):
         print(ybottomi, 'y-bottom index')
 
         fig = plt.figure(0)
-        fig.canvas.set_window_title('Vertical Profile Derivative at x_right')
+        fig.canvas.set_window_title('Vertical Profile Derivative at x_right - ' + filename)
         plt.plot(vert_prof_derivative)
         plt.show()
         return ybottomi
@@ -112,6 +112,21 @@ def zone_division(im, vertical_sum):
     Y = [ytopi, y1, y2, y3, ybottomi]
 
     Pz1, Pz2, Pz3, Pz4 = ([] for _ in range(4))
+    
+    def chunks(start_row, end_row):
+        div_param = end_row - start_row + 1
+        return div_param
+    
+    Pz1 = np.sum(im[ytopi:y1], axis=0)/chunks(ytopi, y1)
+    Pz2 = np.sum(im[y1:y2], axis=0)/chunks(y1, y2)
+    Pz3 = np.sum(im[y2:y3], axis=0)/chunks(y2, y3)
+    Pz4 = np.sum(im[y3:ybottomi], axis=0)/chunks(y3, ybottomi)
+
+    fig = plt.figure(0)
+    fig.canvas.set_window_title('Zone wise projection profile - ' + filename)
+    plt.plot(Pz1, 'r', Pz2, 'g', Pz3, 'b', Pz4, 'r--')
+    plt.show()
+    
 
 
 def vertical_profile(im, x_right):
@@ -121,7 +136,9 @@ def vertical_profile(im, x_right):
     return vert_prof
 
 if __name__ == '__main__':
+    global filename
     for image in os.listdir(data_dir):
+        filename = str(image)
         im = scipy.ndimage.imread(data_dir + image)
         profile_one_dim(im)
         input('Enter')
