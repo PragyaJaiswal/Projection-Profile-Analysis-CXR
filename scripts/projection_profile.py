@@ -105,6 +105,11 @@ def zone_division(im, vertical_sum):
 	ytopi = ytop()
 	ybottomi = ybottom()
 
+	y1 = ytopi + 0.25*(ybottomi-ytopi)
+	y2 = ytopi + 0.5*(ybottomi-ytopi)
+	y3 = ytopi + 0.75*(ybottomi-ytopi)
+	Y = [ytopi, y1, y2, y3, ybottomi]
+
 
 def vertical_profile(im, x_right):
 	vert_prof = []
