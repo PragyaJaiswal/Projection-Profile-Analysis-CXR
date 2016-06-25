@@ -10,11 +10,15 @@ import matplotlib.pyplot as plt
 
 data_dir = '../data/CXR_png/'
 
+# 0 - black, 255 - white
+
 def profile_one_dim(im):
 	im = gray_level(im)
+	print(np.shape(im))
 	vertical_sum = np.sum(im, axis=0)/np.shape(im)[1]
 	plt.plot(vertical_sum)
 	plt.show()
+	zone_division(im, vertical_sum)
 
 def gray_level(im):
 	num_of_gray_levels = len(np.unique(im))
@@ -37,6 +41,36 @@ def gray_level(im):
 	normalized_im = np.divide(im, background_value)
 	return normalized_im
 
+def zone_division(im, vertical_sum):
+	low = math.floor(0.25*len(vertical_sum))
+	high = math.floor(0.50*len(vertical_sum))
+	'''
+	mini = min(vertical_sum[low:high])
+	ind = list(vertical_sum).index(mini)
+	x_right = []
+	for x in im:
+		# print(x[ind])
+		x_right.append(255 - x[ind])
+	# print(x_right)
+	'''
+
+	'''
+	x_right = math.floor(len(vertical_sum)/4)
+	print(x_right, 'div')
+	vertical_profile(im, x_right)
+	'''
+
+	x_right = list(vertical_sum).index(max(vertical_sum[low:high]))
+	print(x_right, 'Max')
+	vert_prof = vertical_profile(im, x_right)
+
+def vertical_profile(im, x_right):
+	vert_prof = []
+	for x in im:
+		vert_prof.append(x[x_right])
+	plt.plot(vert_prof)
+	plt.show()
+	return vert_prof
 
 if __name__ == '__main__':
 	for image in os.listdir(data_dir):
