@@ -8,6 +8,8 @@ import numpy as np
 import scipy.ndimage
 import matplotlib.pyplot as plt
 
+from features import dsymmetry
+
 data_dir = '../data/CXR_png/'
 
 # 0 - black, 255 - white
@@ -113,10 +115,12 @@ def zone_division(im, vertical_sum):
     y1 = ytopi + 0.25*(ybottomi-ytopi)
     y2 = ytopi + 0.5*(ybottomi-ytopi)
     y3 = ytopi + 0.75*(ybottomi-ytopi)
+    # Y contains the indices at which the zones are divided.
     Y = [ytopi, y1, y2, y3, ybottomi]
+    # print(Y)
 
+    '''Local zone based projection profile'''
     Pz1, Pz2, Pz3, Pz4 = ([] for _ in range(4))
-    
     def chunks(start_row, end_row):
         div_param = end_row - start_row + 1
         return div_param
@@ -133,7 +137,10 @@ def zone_division(im, vertical_sum):
     plt.plot(Pz1, 'r', Pz2, 'g', Pz3, 'b', Pz4, 'r--')
     # plt.show()
     
-    points_vector(P, vertical_sum)
+    X = points_vector(P, vertical_sum)
+    # print(X)
+    
+    density_symmetry = dsymmetry(P, X)
 
 
 def points_vector(P, vertical_sum):
@@ -177,7 +184,7 @@ def points_vector(P, vertical_sum):
         xlrib = np.argmin(np.asarray(P[i][low:high])) + xllung
         X[i][4] = xlrib
 
-    print(X)
+    return X
 
 
 
