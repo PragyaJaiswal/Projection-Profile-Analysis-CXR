@@ -18,6 +18,9 @@ def dsymmetry(P, X):
 		dsymmetry[ind] = num
 	return dsymmetry
 
+def roughness(im):
+	# horizontal_sum = np.sum(im, axis=1)/np.shape(im)[0]
+	pass
 
 if __name__ == '__main__':
 	main()

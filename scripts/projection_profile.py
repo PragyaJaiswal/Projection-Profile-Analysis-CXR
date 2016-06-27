@@ -9,7 +9,7 @@ import scipy.ndimage
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
-from features import dsymmetry
+from features import dsymmetry, roughness
 
 data_dir = '../data/CXR_png/'
 
@@ -23,7 +23,9 @@ def profile_one_dim(im):
     fig.canvas.set_window_title('Projection Profile - ' + filename)
     plt.plot(vertical_sum)
     plt.show()
-    zone_division(im, vertical_sum)
+    P, X, Y = zone_division(im, vertical_sum)
+    density_symmetry = dsymmetry(P, X)
+    roughness(im)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))
@@ -147,7 +149,7 @@ def zone_division(im, vertical_sum):
     X = points_vector(P, vertical_sum)
     # print(X)
     
-    density_symmetry = dsymmetry(P, X)
+    return P, X, Y
 
 
 def points_vector(P, vertical_sum):
