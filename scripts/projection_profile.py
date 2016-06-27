@@ -6,6 +6,7 @@ import math
 import operator, collections
 import numpy as np
 import scipy.ndimage
+import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
 from features import dsymmetry
@@ -21,7 +22,7 @@ def profile_one_dim(im):
     fig = plt.figure(0)
     fig.canvas.set_window_title('Projection Profile - ' + filename)
     plt.plot(vertical_sum)
-    # plt.show()
+    plt.show()
     zone_division(im, vertical_sum)
 
 def gray_level(im):
@@ -84,7 +85,7 @@ def zone_division(im, vertical_sum):
         fig = plt.figure(0)
         fig.canvas.set_window_title('Vertical Profile at x_right - ' + filename)
         plt.plot(vert_prof)
-        # plt.show()
+        plt.show()
         return ytopi
 
 
@@ -106,7 +107,7 @@ def zone_division(im, vertical_sum):
         fig = plt.figure(0)
         fig.canvas.set_window_title('Vertical Profile Derivative at x_right - ' + filename)
         plt.plot(vert_prof_derivative)
-        # plt.show()
+        plt.show()
         return ybottomi
 
     ytopi = ytop()
@@ -134,8 +135,14 @@ def zone_division(im, vertical_sum):
 
     fig = plt.figure(0)
     fig.canvas.set_window_title('Zone wise projection profile - ' + filename)
-    plt.plot(Pz1, 'r', Pz2, 'g', Pz3, 'b', Pz4, 'r--')
-    # plt.show()
+    ax = plt.subplot(111)
+    # plt.plot(Pz1, 'r', Pz2, 'g', Pz3, 'b', Pz4, 'r--')
+    ax.plot(Pz1, 'r', label = 'Projection Profile for zone 1')
+    ax.plot(Pz2, 'g', label = 'Projection Profile for zone 2')
+    ax.plot(Pz3, 'b', label = 'Projection Profile for zone 3')
+    ax.plot(Pz4, 'r--', label = 'Projection Profile for zone 4')
+    ax.legend()
+    plt.show()
     
     X = points_vector(P, vertical_sum)
     # print(X)
@@ -153,7 +160,7 @@ def points_vector(P, vertical_sum):
          [xrrib  xrlung  xcenter    xllung  xlrib]]
     '''
     for i in range(0, len(P)):
-        print(len(P[i]))
+        # print(len(P[i]))
         # x_center
         low = math.floor(0.25*len(P[i]))
         high = math.floor(0.75*len(P[i]))
