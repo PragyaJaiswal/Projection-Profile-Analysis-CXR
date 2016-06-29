@@ -18,9 +18,40 @@ def dsymmetry(P, X):
 		dsymmetry[ind] = num
 	return dsymmetry
 
-def roughness(im):
+def roughness(im, row):
 	# horizontal_sum = np.sum(im, axis=1)/np.shape(im)[0]
-	pass
+	# horizontal = im
+	horizontal = np.zeros([1, np.shape(im)[1]])
+	horizontal = im[row]
+	horizontal = np.ndarray.tolist(horizontal)
+	print(len(horizontal))
+	# for i in range(0, np.shape(im)[1]):
+	# 	horizontal[i] = im[row][i]
+
+	avg = np.zeros([1, np.shape(im)[1]])
+	avg = []
+	window = 10
+	avg.append(moving_average(horizontal, window, row))
+
+
+def moving_average(horizontal, window, row):
+	low = row - window/2
+	if low < 0:
+		window = window + low
+		low = 0
+
+	high = row + window/2
+	if high > len(horizontal):
+		window = window + high - len(horizontal)
+		high  = len(horizontal)
+
+	for i in range(low, high+1):
+		summ = summ + horizontal[i]
+
+	avg = summ/(window+1)
+	return avg
+
+
 
 if __name__ == '__main__':
 	main()
