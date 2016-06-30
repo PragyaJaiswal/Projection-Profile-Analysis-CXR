@@ -22,35 +22,63 @@ def extract_features(im, P, X, Y):
 
             if vxrlung - vxrrib > vxllung - vxlrib:
                 lung_field = (vxrlung + vxrrib)/2
+                print(lung_field, 'right')
             else:
                 lung_field = (vxllung + vxlrib)/2
+                print(lung_field, 'left')
 
             RR = 0
             for i in range(top, bottom+1):
-                # RR = RR + roughness(im, i)
-                roughness(im, i, lung_field)
+                RR += roughness(im, i, lung_field, X[ind])
+                # input('Enter')
 
-    def roughness(im, row, lung_field):
+    def roughness(im, row, lung_field, positions):
         # horizontal_sum = np.sum(im, axis=1)/np.shape(im)[0]
         # horizontal = im
         horizontal = np.zeros([1, np.shape(im)[1]])
         horizontal = im[row]
         horizontal = np.ndarray.tolist(horizontal)
+
+        # Find x1, x2, x3, x4
+        xrrib = positions[0]
+        xrlung = positions[1]
+        x1_init = find_nearest(horizontal[xrrib:xrlung], lung_field)
+        x1 = x1_init + xrrib
+        print(x1, 'x1')
+
+        xc = positions[2]
+        x2_init = find_nearest(horizontal[xrlung:xc], lung_field)
+        x2 = x2_init + xrlung
+        print(x2, 'x2')
+
+        xllung = positions[3]
+        x3_init = find_nearest(horizontal[xc:xllung], lung_field)
+        x3 = x3_init + xc
+        print(x3, 'x3')
+
+        xlrib = positions[4]
+        x4_init = find_nearest(horizontal[xllung:xlrib], lung_field)
+        x4 = x4_init + xllung
+        print(x4, 'x4')
+
         fig = plt.figure(0)
         fig.canvas.set_window_title('Horizontal Projection Profile - ' + str(row))
         plt.plot(horizontal)
         plt.show()
 
-        # Find x1, x2, x3, x4
-        print(find_nearest(horizontal, lung_field))
-        # Does not return the desired index, as of now. Test fails.
-        # Something is wrong with the horizontal projection profile.
-
         avg = np.zeros([1, np.shape(im)[1]])
         avg = []
         window = 10
         avg.append(moving_average(horizontal, window, row))
+        print(len(avg))
 
+        '''
+        rough = 0
+        for i in range(x1,x2):
+            rough += abs(horizontal[i] - avg[i])
+        rough = rough/(x2-x1+1)
+        return rough
+        '''
 
     NRR = roughness_indices()
     NRl = roughness_indices()
@@ -58,8 +86,9 @@ def extract_features(im, P, X, Y):
 
 def find_nearest(horizontal, value):
     ind = (np.abs(np.asarray(horizontal)-value)).argmin()
-    print(ind)
-    return horizontal[ind]
+    print(horizontal[ind])
+    return ind
+
 
 def dsymmetry(P, X):
     '''
