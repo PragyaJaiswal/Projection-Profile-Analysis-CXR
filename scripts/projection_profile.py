@@ -192,7 +192,7 @@ def points_vector(P, vertical_sum):
         xlrib = np.argmin(np.asarray(P[i][low:high])) + xllung
         X[i][4] = xlrib
 
-    return X
+    return X.astype(int)
 
 def vertical_profile_at_xright(im, x_right):
     vert_prof = []
