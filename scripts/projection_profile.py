@@ -6,10 +6,9 @@ import math
 import operator, collections
 import numpy as np
 import scipy.ndimage
-import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
-from features import dsymmetry, roughness
+from features import extract_features
 
 data_dir = '../data/CXR_png/'
 
@@ -24,8 +23,8 @@ def profile_one_dim(im):
     plt.plot(vertical_sum)
     plt.show()
     P, X, Y = zone_division(im, vertical_sum)
-    density_symmetry = dsymmetry(P, X)
-    roughness(im)
+
+    extract_features(im, P, X, Y)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))
@@ -115,12 +114,12 @@ def zone_division(im, vertical_sum):
     ytopi = ytop()
     ybottomi = ybottom()
 
-    y1 = ytopi + 0.25*(ybottomi-ytopi)
-    y2 = ytopi + 0.5*(ybottomi-ytopi)
-    y3 = ytopi + 0.75*(ybottomi-ytopi)
+    y1 = ytopi + math.floor(0.25*(ybottomi-ytopi))
+    y2 = ytopi + math.floor(0.5*(ybottomi-ytopi))
+    y3 = ytopi + math.floor(0.75*(ybottomi-ytopi))
     # Y contains the indices at which the zones are divided.
     Y = [ytopi, y1, y2, y3, ybottomi]
-    # print(Y)
+    # print(Y)Y =
 
     '''Local zone based projection profile'''
     Pz1, Pz2, Pz3, Pz4 = ([] for _ in range(4))
@@ -194,8 +193,6 @@ def points_vector(P, vertical_sum):
         X[i][4] = xlrib
 
     return X
-
-
 
 def vertical_profile_at_xright(im, x_right):
     vert_prof = []
