@@ -10,7 +10,7 @@ def extract_features(im, P, X, Y):
 
     def roughness_indices():
         for ind, proj_zone in enumerate(P):
-            print('Zone {0}'.format(ind))
+            print('Zone {0}'.format(ind+1))
             top = Y[ind]
             bottom = Y[ind+1]
 
@@ -28,12 +28,13 @@ def extract_features(im, P, X, Y):
                 lung_field = (vxllung + vxlrib)/2
                 print(lung_field, 'left')
 
-            RR = 0
+
             for i in range(top, bottom+1):
-                roughness(im, i, lung_field, X[ind])
-                # RR += roughness(im, i, lung_field, X[ind])
-                # input('Enter')
+                # roughness(im, i, lung_field, X[ind])
+                RR, RL = roughness(im, i, lung_field, X[ind])
+                
             # input('Enter')
+
 
     def roughness(im, row, lung_field, positions):
         # horizontal_sum = np.sum(im, axis=1)/np.shape(im)[0]
@@ -71,20 +72,28 @@ def extract_features(im, P, X, Y):
         plt.show()
         '''
 
-        avg = np.zeros([1, np.shape(im)[1]])
+        # Calculate moving average for horizontal profile.
         avg = []
         window = 10
-        avg.append(moving_average(horizontal, window, row))
-
-        '''
-        rough = 0
+        for i in range(0,np.shape(im)[1]):
+            avg.append(moving_average(horizontal, window, row))
+        
+        # Calculate roughness for right side, for each horizontal profile in zone.
+        RR = 0
         for i in range(x1,x2):
-            rough += abs(horizontal[i] - avg[i])
-        rough = rough/(x2-x1+1)
-        return rough
-        '''
+            RR += abs(horizontal[i] - avg[i])
+        RR = RR/(x2-x1+1)
 
-    NRR = roughness_indices()
+        # Calculate roughness for left side, for horizontal profile in zone.
+        RL = 0
+        for i in range(x3,x4):
+            RL += abs(horizontal[i] - avg[i])
+        RL = RL/(x4-x3+1)
+
+        return RR, RL        
+        
+
+    roughness_indices()
     # NRL = roughness_indices()
 
 
@@ -92,21 +101,6 @@ def find_nearest(horizontal, value):
     ind = (np.abs(np.asarray(horizontal)-value)).argmin()
     return ind, horizontal[ind]
 
-
-def dsymmetry(P, X):
-    '''
-    dsymmetry  = [dsymmetry_zone1
-                    .
-                    .
-                  dsymmetry_zone4]
-    '''
-    dsymmetry = np.zeros(4)
-    for ind, zone in enumerate(P):
-        vxrlung = zone[X[ind][1]]
-        vxllung = zone[X[ind][3]]
-        num = vxrlung - vxllung / max(vxrlung, vxllung)
-        dsymmetry[ind] = num
-    return dsymmetry
 
 def moving_average(horizontal, window, row):
     low = math.floor(row - window/2)
@@ -127,6 +121,20 @@ def moving_average(horizontal, window, row):
     return avg
 
 
+def dsymmetry(P, X):
+    '''
+    dsymmetry  = [dsymmetry_zone1
+                    .
+                    .
+                  dsymmetry_zone4]
+    '''
+    dsymmetry = np.zeros(4)
+    for ind, zone in enumerate(P):
+        vxrlung = zone[X[ind][1]]
+        vxllung = zone[X[ind][3]]
+        num = vxrlung - vxllung / max(vxrlung, vxllung)
+        dsymmetry[ind] = num
+    return dsymmetry
 
 if __name__ == '__main__':
     main()
