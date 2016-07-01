@@ -24,7 +24,7 @@ def profile_one_dim(im):
     plt.show()
     P, X, Y = zone_division(im, vertical_sum)
 
-    extract_features(im, P, X, Y)
+    dsymmetry, roughness_max, roughness_symmetry = extract_features(im, P, X, Y)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))

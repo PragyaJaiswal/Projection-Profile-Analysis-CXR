@@ -70,6 +70,8 @@ def extract_features(im, P, X, Y):
             roughness_symmetry.append(diff/mini)
         # print(roughness_symmetry)
 
+        return roughness_max, roughness_symmetry
+
 
     def roughness(im, row, lung_field, positions):
         # horizontal_sum = np.sum(im, axis=1)/np.shape(im)[0]
@@ -133,9 +135,8 @@ def extract_features(im, P, X, Y):
 
         return RR, RL        
         
-
-    roughness_indices()
-    # NRL = roughness_indices()
+    roughness_max, roughness_symmetry = roughness_indices()
+    return dsymmetry, roughness_max, roughness_symmetry
 
 
 def find_nearest(horizontal, value):
