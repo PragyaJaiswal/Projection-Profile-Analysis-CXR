@@ -53,14 +53,22 @@ def extract_features(im, P, X, Y):
 
             NRR.append(summ_RR/c_rl * (1/(bottom-top+1)))
             NRL.append(summ_RL/c_rl * (1/(bottom-top+1)))
-            print(NRR, NRL)
+            print('NRR - ', NRR)
+            print('NRL - ', NRL)
 
             # input('Enter')
 
         roughness_max = []
         for zone in range(0,len(P)):
             roughness_max.append(max(NRR[zone], NRL[zone])) 
-        print(roughness_max)
+        # print(roughness_max)
+
+        roughness_symmetry = []
+        for zone in range(0, len(P)):
+            diff = abs(NRL[zone] - NRR[zone])
+            mini = min(NRL[zone], NRR[zone])
+            roughness_symmetry.append(diff/mini)
+        # print(roughness_symmetry)
 
 
     def roughness(im, row, lung_field, positions):
