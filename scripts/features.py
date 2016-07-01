@@ -8,6 +8,14 @@ import matplotlib.pyplot as plt
 def extract_features(im, P, X, Y):
     density_symmetry = dsymmetry(P, X)
 
+    '''
+    Calculates contrast between rib and lung for the
+    image from the local projection profile of zone 2.
+    '''
+    zone = 2
+    c_rl = contrast_rib_lung(P, X, zone)
+    # print(c_rl)
+
     def roughness_indices():
         for ind, proj_zone in enumerate(P):
             print('Zone {0}'.format(ind+1))
@@ -74,6 +82,7 @@ def extract_features(im, P, X, Y):
         # print('x4 - {0}, y - {1}'.format(x4, val))
 
         print('Finished calculating lung field positions.')
+        
         '''
         fig = plt.figure(0)
         fig.canvas.set_window_title('Horizontal Projection Profile - ' + str(row))
@@ -131,6 +140,19 @@ def moving_average(horizontal, window, row):
 
     avg = summ/(window+1)
     return avg
+
+
+def contrast_rib_lung(P, X, zone):
+    xrrib = X[zone][0]
+    xrlung = X[zone][1]
+    cr = abs(P[zone][xrlung] - P[zone][xrrib])
+
+    xlrib = X[zone][4]
+    xllung = X[zone][3]
+    cl = abs(P[zone][xllung] - P[zone][xlrib])
+
+    c_rl = max(cr, cl)
+    return c_rl
 
 
 def dsymmetry(P, X):
