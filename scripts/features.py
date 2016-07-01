@@ -17,6 +17,8 @@ def extract_features(im, P, X, Y):
     # print(c_rl)
 
     def roughness_indices():
+        NRR = []
+        NRL = []
         for ind, proj_zone in enumerate(P):
             print('Zone {0}'.format(ind+1))
             top = Y[ind]
@@ -47,13 +49,18 @@ def extract_features(im, P, X, Y):
                 summ_RL += RL
 
             print('Finished roughness for zone {0}.'.format(ind+1))
-            print(summ_RR, summ_RL, 'Zone {0}'.format(ind+1))
+            print('RR - ', summ_RR, 'RL - ', summ_RL, 'Zone {0}'.format(ind+1))
 
-            NRR = summ_RR/c_rl * (1/(bottom-top+1))
-            NRL = summ_RL/c_rl * (1/(bottom-top+1))
+            NRR.append(summ_RR/c_rl * (1/(bottom-top+1)))
+            NRL.append(summ_RL/c_rl * (1/(bottom-top+1)))
             print(NRR, NRL)
 
-            input('Enter')
+            # input('Enter')
+
+        roughness_max = []
+        for zone in range(0,len(P)):
+            roughness_max.append(max(NRR[zone], NRL[zone])) 
+        print(roughness_max)
 
 
     def roughness(im, row, lung_field, positions):
