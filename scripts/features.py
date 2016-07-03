@@ -49,7 +49,7 @@ def extract_features(im, P, X, Y):
                 summ_RL += RL
 
             print('Finished roughness for zone {0}.'.format(ind+1))
-            print('RR - ', summ_RR, 'RL - ', summ_RL, 'Zone {0}'.format(ind+1))
+            print('RR - ', summ_RR, 'RL - ', summ_RL, 'for Zone {0}\n'.format(ind+1))
 
             NRR.append(summ_RR/c_rl * (1/(bottom-top+1)))
             NRL.append(summ_RL/c_rl * (1/(bottom-top+1)))
@@ -190,6 +190,3 @@ def dsymmetry(P, X):
         num = vxrlung - vxllung / max(vxrlung, vxllung)
         dsymmetry[ind] = num
     return dsymmetry
-
-if __name__ == '__main__':
-    main()
