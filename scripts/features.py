@@ -99,6 +99,7 @@ def extract_features(im, P, X, Y):
         # print('x3 - {0}, y - {1}'.format(x3, val))
 
         xlrib = positions[4]
+        # print(xllung, xlrib)
         x4_init, val = find_nearest(horizontal[xllung:xlrib], lung_field)
         x4 = x4_init + xllung
         # print('x4 - {0}, y - {1}'.format(x4, val))
@@ -136,7 +137,7 @@ def extract_features(im, P, X, Y):
         return RR, RL        
         
     roughness_max, roughness_symmetry = roughness_indices()
-    return dsymmetry, roughness_max, roughness_symmetry
+    return density_symmetry, roughness_max, roughness_symmetry
 
 
 def find_nearest(horizontal, value):
@@ -189,4 +190,4 @@ def dsymmetry(P, X):
         vxllung = zone[X[ind][3]]
         num = vxrlung - vxllung / max(vxrlung, vxllung)
         dsymmetry[ind] = num
-    return dsymmetry
+    return np.ndarray.tolist(dsymmetry)
