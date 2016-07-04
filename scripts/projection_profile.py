@@ -9,6 +9,7 @@ import scipy.ndimage
 import matplotlib.pyplot as plt
 
 from features import extract_features
+from save_features import feature_vector
 
 data_dir = '../data/CXR_png/'
 
@@ -24,7 +25,8 @@ def profile_one_dim(im):
     plt.show()
     P, X, Y = zone_division(im, vertical_sum)
 
-    dsymmetry, roughness_max, roughness_symmetry = extract_features(im, P, X, Y)
+    density_symmetry, roughness_max, roughness_symmetry = extract_features(im, P, X, Y)
+    feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename, vector)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))
@@ -175,9 +177,9 @@ def points_vector(P, vertical_sum):
         X[i][1] = xrlung
 
         # xllung
-        low = xc
+        low = xc+1
         high = math.floor(0.875*len(P[i]))
-        xllung = np.argmax(np.asarray(P[i][low:high])) + xc
+        xllung = np.argmax(np.asarray(P[i][low:high])) + low
         X[i][3] = xllung
 
         # xrrib
@@ -187,9 +189,9 @@ def points_vector(P, vertical_sum):
         X[i][0] = xrrib
 
         # xlrib
-        low = xllung
+        low = xllung+1
         high = len(P[i]) - 1
-        xlrib = np.argmin(np.asarray(P[i][low:high])) + xllung
+        xlrib = np.argmin(np.asarray(P[i][low:high])) + low
         X[i][4] = xlrib
 
     return X.astype(int)
@@ -201,7 +203,8 @@ def vertical_profile_at_xright(im, x_right):
     return vert_prof
 
 if __name__ == '__main__':
-    global filename
+    global filename, vector
+    vector = []
     for image in os.listdir(data_dir):
         filename = str(image)
         im = scipy.ndimage.imread(data_dir + image)
