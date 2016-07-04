@@ -99,7 +99,6 @@ def extract_features(im, P, X, Y):
         # print('x3 - {0}, y - {1}'.format(x3, val))
 
         xlrib = positions[4]
-        # print(xllung, xlrib)
         x4_init, val = find_nearest(horizontal[xllung:xlrib], lung_field)
         x4 = x4_init + xllung
         # print('x4 - {0}, y - {1}'.format(x4, val))

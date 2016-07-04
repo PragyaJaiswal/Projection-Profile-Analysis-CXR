@@ -22,11 +22,13 @@ def profile_one_dim(im):
     fig = plt.figure(0)
     fig.canvas.set_window_title('Projection Profile - ' + filename)
     plt.plot(vertical_sum)
-    plt.show()
+    # plt.show()
     P, X, Y = zone_division(im, vertical_sum)
 
     density_symmetry, roughness_max, roughness_symmetry = extract_features(im, P, X, Y)
-    feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename, vector)
+    fv = feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename, vector)
+    all_vector.append(fv)
+    print(all_vector)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))
@@ -88,7 +90,7 @@ def zone_division(im, vertical_sum):
         fig = plt.figure(0)
         fig.canvas.set_window_title('Vertical Profile at x_right - ' + filename)
         plt.plot(vert_prof)
-        plt.show()
+        # plt.show()
         return ytopi
 
 
@@ -110,7 +112,7 @@ def zone_division(im, vertical_sum):
         fig = plt.figure(0)
         fig.canvas.set_window_title('Vertical Profile Derivative at x_right - ' + filename)
         plt.plot(vert_prof_derivative)
-        plt.show()
+        # plt.show()
         return ybottomi
 
     ytopi = ytop()
@@ -145,7 +147,7 @@ def zone_division(im, vertical_sum):
     ax.plot(Pz3, 'b', label = 'Projection Profile for zone 3')
     ax.plot(Pz4, 'r--', label = 'Projection Profile for zone 4')
     ax.legend()
-    plt.show()
+    # plt.show()
     
     X = points_vector(P, vertical_sum)
     # print(X)
@@ -203,8 +205,8 @@ def vertical_profile_at_xright(im, x_right):
     return vert_prof
 
 if __name__ == '__main__':
-    global filename, vector
-    vector = []
+    global filename, all_vector
+    all_vector = []
     for image in os.listdir(data_dir):
         filename = str(image)
         im = scipy.ndimage.imread(data_dir + image)
