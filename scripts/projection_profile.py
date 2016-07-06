@@ -9,7 +9,7 @@ import scipy.ndimage
 import matplotlib.pyplot as plt
 
 from features import extract_features
-from save_features import feature_vector
+from save_features import feature_vector, dump, load
 
 data_dir = '../data/CXR_png/'
 
@@ -26,9 +26,9 @@ def profile_one_dim(im):
     P, X, Y = zone_division(im, vertical_sum)
 
     density_symmetry, roughness_max, roughness_symmetry = extract_features(im, P, X, Y)
-    fv = feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename, vector)
+    fv = feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename)
     all_vector.append(fv)
-    print(all_vector)
+    # print(all_vector)
 
 def gray_level(im):
     num_of_gray_levels = len(np.unique(im))
@@ -123,7 +123,7 @@ def zone_division(im, vertical_sum):
     y3 = ytopi + math.floor(0.75*(ybottomi-ytopi))
     # Y contains the indices at which the zones are divided.
     Y = [ytopi, y1, y2, y3, ybottomi]
-    # print(Y)Y =
+    # print(Y)
 
     '''Local zone based projection profile'''
     Pz1, Pz2, Pz3, Pz4 = ([] for _ in range(4))
@@ -179,7 +179,7 @@ def points_vector(P, vertical_sum):
         X[i][1] = xrlung
 
         # xllung
-        low = xc+1
+        low = xc + 1
         high = math.floor(0.875*len(P[i]))
         xllung = np.argmax(np.asarray(P[i][low:high])) + low
         X[i][3] = xllung
@@ -191,12 +191,13 @@ def points_vector(P, vertical_sum):
         X[i][0] = xrrib
 
         # xlrib
-        low = xllung+1
+        low = xllung + 1
         high = len(P[i]) - 1
         xlrib = np.argmin(np.asarray(P[i][low:high])) + low
         X[i][4] = xlrib
 
     return X.astype(int)
+
 
 def vertical_profile_at_xright(im, x_right):
     vert_prof = []
@@ -204,11 +205,17 @@ def vertical_profile_at_xright(im, x_right):
         vert_prof.append(x[x_right])
     return vert_prof
 
+
 if __name__ == '__main__':
     global filename, all_vector
     all_vector = []
+    count = 0
     for image in os.listdir(data_dir):
         filename = str(image)
         im = scipy.ndimage.imread(data_dir + image)
         profile_one_dim(im)
-        input('Enter')
+        count += 1
+        if count == 4:
+            break
+    dump(all_vector)
+    # load()
