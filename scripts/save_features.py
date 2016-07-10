@@ -27,3 +27,4 @@ def load(filename):
 	# print(pickle.load(open('features.pkl', 'rb')))
 	feat_vector = np.load(out_dir + filename)
 	print(len(feat_vector))
+	return feat_vector

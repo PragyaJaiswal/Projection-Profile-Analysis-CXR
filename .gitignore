@@ -89,3 +89,4 @@ ENV/
 .ropeproject
 
 /data/
+/sample_output/pickles/
