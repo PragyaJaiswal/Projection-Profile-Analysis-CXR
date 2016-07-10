@@ -81,7 +81,7 @@ def extract_features(im, P, X, Y):
         horizontal = np.ndarray.tolist(horizontal)
 
         # Find x1, x2, x3, x4
-        print('Calculating lung field positions - x1, x2, x3, x4.')
+        '''print('Calculating lung field positions - x1, x2, x3, x4.')'''
         xrrib = positions[0]
         xrlung = positions[1]
         x1_init, val = find_nearest(horizontal[xrrib:xrlung], lung_field)
@@ -103,7 +103,7 @@ def extract_features(im, P, X, Y):
         x4 = x4_init + xllung
         # print('x4 - {0}, y - {1}'.format(x4, val))
 
-        print('Finished calculating lung field positions.')
+        '''print('Finished calculating lung field positions.')'''
         
         '''
         fig = plt.figure(0)
@@ -113,21 +113,21 @@ def extract_features(im, P, X, Y):
         '''
 
         # Calculate moving average for horizontal profile.
-        print('Finding moving average for horizontal profile')
+        '''print('Finding moving average for horizontal profile')'''
         avg = []
         window = 10
         for i in range(0,np.shape(im)[1]):
             avg.append(moving_average(horizontal, window, row))
         
         # Calculate roughness for right side, for each horizontal profile in zone.
-        print('Calculating roughness for right side for horizontal profile.')
+        '''print('Calculating roughness for right side for horizontal profile.')'''
         RR = 0
         for i in range(x1,x2):
             RR += abs(horizontal[i] - avg[i])
         RR = RR/(x2-x1+1)
 
         # Calculate roughness for left side, for horizontal profile in zone.
-        print('Calculating roughness for left side for horizontal profile.\n')
+        '''print('Calculating roughness for left side for horizontal profile.\n')'''
         RL = 0
         for i in range(x3,x4):
             RL += abs(horizontal[i] - avg[i])

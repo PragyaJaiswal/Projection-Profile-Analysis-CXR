@@ -9,7 +9,7 @@ import scipy.ndimage
 import matplotlib.pyplot as plt
 
 from features import extract_features
-from save_features import feature_vector, dump, load
+from save_features import feature_vector, dump, load, label_vec
 
 data_dir = '../data/CXR_png/'
 
@@ -212,10 +212,13 @@ if __name__ == '__main__':
     count = 0
     for image in os.listdir(data_dir):
         filename = str(image)
+        print('Processing: {0}'.format(filename))
         im = scipy.ndimage.imread(data_dir + image)
         profile_one_dim(im)
+        print('Processed: {0}'.format(filename))
         count += 1
-        if count == 4:
-            break
-    dump(all_vector)
-    # load()
+        print('Files processed: {0}'.format(count))
+    dump(all_vector, 'features.pkl')
+    label_vec(all_vector)
+    # load('features.pkl')
+    # load('labels.pkl')
