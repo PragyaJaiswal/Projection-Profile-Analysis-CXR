@@ -4,6 +4,8 @@
 import numpy as np
 import json, pickle
 
+out_dir = '../sample_output/pickles/'
+
 def feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename):
 	# print(density_symmetry, roughness_max, roughness_symmetry)
 	arr = np.append(density_symmetry, roughness_max, axis = 0)
@@ -18,10 +20,10 @@ def label_vec(all_vector):
 	dump(labels, 'labels.pkl')
 
 def dump(all_vector, out_filename):
-	with open(out_filename, 'wb') as outfile:
+	with open(out_dir + out_filename, 'wb') as outfile:
 		pickle.dump(all_vector, outfile)
 
 def load(filename):
 	# print(pickle.load(open('features.pkl', 'rb')))
-	feat_vector = np.load(filename)
+	feat_vector = np.load(out_dir + filename)
 	print(len(feat_vector))
