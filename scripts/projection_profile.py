@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from features import extract_features
 from save_features import feature_vector, dump, load, label_vec
 
-data_dir = '../data/CXR_png/'
+data_dir = '../data/CXR_png_complete/'
 
 # 0 - black, 255 - white
 
@@ -74,7 +74,8 @@ def zone_division(im, vertical_sum):
     vertical_profile_at_xright(im, x_right)
     '''
 
-    x_right = list(vertical_sum).index(max(vertical_sum[low:high]))
+    # x_right = list(vertical_sum).index(max(vertical_sum[low:high]))
+    x_right = np.argmax(vertical_sum[low:high])
     print(x_right, 'x_right')
     vert_prof = vertical_profile_at_xright(im, x_right)
 
@@ -83,6 +84,7 @@ def zone_division(im, vertical_sum):
         low = math.floor(0.05*len(vert_prof))
         high = math.floor(0.50*len(vert_prof))
         ytopv = min(vert_prof[low:high])
+        # ytopv = min(vert_prof[low:high])
         # ytopi = vert_prof.index(ytopv)
         ytopi = np.argmin(np.asarray(vert_prof[low:high])) + low
 
@@ -103,7 +105,7 @@ def zone_division(im, vertical_sum):
             f'(x) = f(x+h) - f(x)/h'''
         h = 20
         for i in range(0, len(vert_prof)-h):
-            vert_prof_derivative[i] = (vert_prof[i+h] - vert_prof[i])/h
+            vert_prof_derivative[i] = ((vert_prof[i+h] - vert_prof[i])/h)
         ybottomv = min(vert_prof_derivative[low:high])
         # ybottomi = list(vert_prof_derivative[low:high]).index(ybottomv) + low
         ybottomi = np.argmin(np.asarray(vert_prof_derivative[low:high])) + low
@@ -213,12 +215,10 @@ if __name__ == '__main__':
     for image in os.listdir(data_dir):
         filename = str(image)
         print('Processing: {0}'.format(filename))
-        im = scipy.ndimage.imread(data_dir + image)
+        im = scipy.ndimage.imread(data_dir + image, flatten=True)
         profile_one_dim(im)
         print('Processed: {0}'.format(filename))
         count += 1
         print('Files processed: {0}'.format(count))
-    dump(all_vector, 'features.pkl')
+    dump(all_vector, 'features_complete.pkl')
     label_vec(all_vector)
-    # load('features.pkl')
-    # load('labels.pkl')
