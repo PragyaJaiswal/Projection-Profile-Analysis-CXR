@@ -26,5 +26,42 @@ def dump(all_vector, out_filename):
 def load(filename):
 	# print(pickle.load(open('features.pkl', 'rb')))
 	feat_vector = np.load(out_dir + filename)
-	print(len(feat_vector))
+	feat_vector = cleaned(feat_vector)
 	return feat_vector
+
+def cleaned(feat_vector):
+	pos = []
+	neg = []
+	for i in range(len(feat_vector)):
+		label = feat_vector[i][-1]
+		if label == '1':
+			pos.append(feat_vector[i])
+		else:
+			neg.append(feat_vector[i])
+	print(len(pos), len(neg))
+	neg = replace_nan_or_inf(neg)
+	pos = replace_nan_or_inf(pos)
+	
+	fv = np.concatenate((neg, pos), axis=0)
+	print(np.shape(fv))
+	return fv
+
+def replace_nan_or_inf(arr):
+	fine = []
+	nanorinf = []
+	for i in range(0, 12):
+		for j in range(0, len(arr)):
+			if np.isnan(float(arr[j][i])) or np.isinf(float(arr[j][i])):
+				nanorinf.append(j)
+			else:
+				fine.append(float(arr[j][i]))
+		val = np.median(fine)
+		
+		for ind in nanorinf:
+			arr[ind][i] = val
+
+		fine = []
+		nanorinf = []
+
+	return arr
+
