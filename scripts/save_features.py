@@ -14,17 +14,16 @@ def feature_vector(density_symmetry, roughness_max, roughness_symmetry, filename
 	arr = np.append(arr, label)
 	return arr
 
-def label_vec(all_vector):
+def label_vec(all_vector, file):
 	labels = (np.asarray(all_vector))[:, [12]]
 	print(len(labels))
-	dump(labels, 'labels.pkl')
+	dump(labels, file)
 
 def dump(all_vector, out_filename):
 	with open(out_dir + out_filename, 'wb') as outfile:
 		pickle.dump(all_vector, outfile)
 
 def load(filename):
-	# print(pickle.load(open('features.pkl', 'rb')))
 	feat_vector = np.load(out_dir + filename)
 	feat_vector = cleaned(feat_vector)
 	return feat_vector
@@ -38,13 +37,42 @@ def cleaned(feat_vector):
 			pos.append(feat_vector[i])
 		else:
 			neg.append(feat_vector[i])
-	print(len(pos), len(neg))
+	# print(len(pos), len(neg))
 	neg = replace_nan_or_inf(neg)
 	pos = replace_nan_or_inf(pos)
 	
 	fv = np.concatenate((neg, pos), axis=0)
 	print(np.shape(fv))
 	return fv
+
+def replace_nan_or_inf_mod(arr):
+	# Removes the rows containing NaN values. 
+	print(len(arr))
+	nanorinf = []
+	fine = []
+
+	for j in range(0, len(arr)):
+		for i in range(0, 12):
+			if np.isnan(float(arr[j][i])) or np.isinf(float(arr[j][i])):
+				nanorinf.append(j)
+				break
+	
+	print(len(nanorinf))
+
+	for j in range(0, len(arr)):
+		if j in nanorinf:
+			pass
+		else:
+			fine.append(j)
+
+	fine_mat = [[] for i in range(len(fine))]
+	
+	for ind, ele in enumerate(fine):
+		fine_mat[ind] = arr[ele]
+
+	# print(fine_mat)
+	return fine_mat
+
 
 def replace_nan_or_inf(arr):
 	fine = []
@@ -64,4 +92,3 @@ def replace_nan_or_inf(arr):
 		nanorinf = []
 
 	return arr
-
