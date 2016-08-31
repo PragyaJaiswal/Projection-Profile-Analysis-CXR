@@ -6,16 +6,34 @@ from sklearn.ensemble import RandomForestClassifier
 from save_features import load
 
 def train_RFC():
-    fv = load('features_complete.pkl')
+    fv = load('features_montg_complete.pkl')
     a = [[] for i in range(len(fv))]
     for row_num, row in enumerate(fv):
         a[row_num] = fv[row_num][0:12]
 
     print(np.shape(a))
+
+    # # 85% of 662 = 562.7
+    # train_set = a[0:562]
+    # test_set = a[563:]
     
     # 80% of 662 = 530
     train_set = a[0:530]
     test_set = a[531:]
+    '''
+    # 85% of 530 = 450
+    train_set = a[0:450]
+    test_set = a[451:]
+
+    # 80% of 530 = 424
+    train_set = a[0:424]
+    test_set = a[425:]
+    '''
+    
+    # Montogomery Set
+    # 80% of 138 = 110
+    # train_set = a[0:117]
+    # test_set = a[118:]
 
     labels = []
     for i in range(len(fv)):

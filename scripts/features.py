@@ -156,8 +156,11 @@ def moving_average(horizontal, window, row):
         high  = len(horizontal)
 
     summ = 0
-    for i in range(low, high+1):
-        summ = summ + horizontal[i]
+    for i in range(low, high):
+        try:
+            summ = summ + horizontal[i]
+        except IndexError:
+            print('Index out of range', i, low, high)
 
     avg = summ/(window+1)
     return avg
